@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+python-telegram-bot = "*"
+django = "==2.2.9"
+pillow = "*"
+celery = "*"
+channels = "*"
+channels-redis = "*"
+requests = "*"
+redis = "*"
+fake-useragent = "*"
+gevent = "*"
+beautifulsoup4 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
