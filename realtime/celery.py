@@ -63,7 +63,7 @@ def parse_binance():
                         client.set('binanceFirst', json.dumps(resp["data"]["articles"][0]))
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
-                            sendNotificationsViaTelegram(f"<strong>(Binance)</strong> {rs['title']}")
+                            sendNotificationsViaTelegram(f"🔱Binance🔱\n\n{rs['title']}")
                         return new_resp
         except Exception as e:
             print(e)
@@ -98,7 +98,7 @@ def parse_okex():
                         client.set('okexFirst', json.dumps(resp["activities"][0]))
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
-                            sendNotificationsViaTelegram(f"https://okexsupport.zendesk.com{rs['url']} \n<strong>(Okex)</strong> {rs['title']}")
+                            sendNotificationsViaTelegram(f"🔱Okex🔱\n\nhttps://okexsupport.zendesk.com{rs['url']}\n {rs['title']}")
                         return new_resp
         except Exception as e:
             print(e)
@@ -133,7 +133,7 @@ def parse_huobi():
                         client.set('huobiFirst', json.dumps(resp["data"]["list"][0]))
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
-                            sendNotificationsViaTelegram(f"<strong>(Huobi)</strong> {rs['title']}")
+                            sendNotificationsViaTelegram(f"🔱Huobi🔱\n\n{rs['title']}")
                         return new_resp
         except Exception as e:
             print(e)
@@ -147,18 +147,14 @@ def parse_coinbase():
     while True:
         try:
             first = client.get('coinbaseFirst')
-            response = requests.request("GET", url, headers=headers, data=payload)
+            response = requests.request("GET", url)
             soup = BeautifulSoup(response.text, 'html.parser')
             mainCenter = soup.find(class_='ap aq ar as at fz av v')
-            for _, i in enumerate(mainCenter):
-                url_ = i.find("h1").find("a")["href"]
-                title_ = i.find("h1").find("a").text
-                text_ = "\n".join(f.text for f in i.find("section").findChildren("p"))
-                # bot.send_message(chat_id="859434333", text=f"{url_.split('?')[0]}\n\n<strong>{title_}</strong>\n\n{text_}", parse_mode=ParseMode.HTML)
+            print(mainCenter)
             new_resp = []
 
             first_url = next(mainCenter.children, None)
-            first_url = first.find("h1").find("a")["href"]
+            first_url = first_url.find("h1").find("a")["href"]
             if not first:
                 client.set('coinbaseFirst', first_url)
             if first != first_url:
@@ -167,7 +163,7 @@ def parse_coinbase():
                     if first != url_:
                         title_ = r.find("h1").find("a").text
                         text_ = "\n".join(f.text for f in r.find("section").findChildren("p"))
-                        new_resp.append(f"{url_.split('?')[0]}\n\n<strong>(Coinbase) {title_}</strong>\n\n{text_}")
+                        new_resp.append(f"🔱Coinbase🔱\n\n{url_.split('?')[0]}\n<strong>{title_}</strong>\n{text_}")
                     else:
                         client.set('coinbaseFirst', first_url)
                         for rs in new_resp:
