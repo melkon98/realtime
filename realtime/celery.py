@@ -66,7 +66,7 @@ def parse_binance():
                             sendNotificationsViaTelegram(f"🔱Binance🔱\n\n{rs['title']}")
                         return new_resp
         except Exception as e:
-            print(e)
+            print("Binance", e)
             sleep(1)
 
 @app.task()
@@ -101,7 +101,7 @@ def parse_okex():
                             sendNotificationsViaTelegram(f"🔱Okex🔱\n\nhttps://okexsupport.zendesk.com{rs['url']}\n {rs['title']}")
                         return new_resp
         except Exception as e:
-            print(e)
+            print("Okex", e)
             sleep(1)
 
 @app.task()
@@ -136,7 +136,7 @@ def parse_huobi():
                             sendNotificationsViaTelegram(f"🔱Huobi🔱\n\n{rs['title']}")
                         return new_resp
         except Exception as e:
-            print(e)
+            print("Huobi", e)
             sleep(1)
 
 @app.task()
@@ -150,7 +150,6 @@ def parse_coinbase():
             response = requests.request("GET", url)
             soup = BeautifulSoup(response.text, 'html.parser')
             mainCenter = soup.find(class_='ap aq ar as at fz av v')
-            print(mainCenter)
             new_resp = []
 
             first_url = next(mainCenter.children, None)
@@ -170,8 +169,8 @@ def parse_coinbase():
                             sendNotificationsViaTelegram(rs)
                         return new_resp
         except Exception as e:
-            print(e)
-            sleep(1)
+            print("Coinbase", e)
+        sleep(1)
 
 parse_binance.delay()
 parse_okex.delay()
