@@ -83,6 +83,7 @@ def parse_binance():
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Binance🔱\n\n{rs['title']}")
                         print( new_resp)
+            print("No Changes 🔱Binance🔱")
         except Exception as e:
             print("Binance", e)
             sleep(1)
@@ -118,6 +119,7 @@ def parse_okex():
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Okex🔱\n\nhttps://okexsupport.zendesk.com{rs['url']}\n {rs['title']}")
                         print( new_resp)
+            print("No Changes 🔱Okex🔱")
         except Exception as e:
             print("Okex", e)
             sleep(1)
@@ -152,8 +154,8 @@ def parse_huobi():
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Huobi🔱\n\n{rs['title']}")
-                        print( new_resp)
-            print( "No Changes")
+                        print(new_resp)
+            print("No Changes 🔱Huobi🔱")
         except Exception as e:
             print("Huobi", e)
             sleep(1)
