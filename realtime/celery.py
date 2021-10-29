@@ -18,12 +18,30 @@ import telegram
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 from time import sleep
+import random
 
 telegram_settings = settings.TELEGRAM
 
 def sendNotificationsViaTelegram(message_html):
     bot = telegram.Bot(token=telegram_settings['bot_token'])
     bot.send_message(chat_id="%s" % telegram_settings['channel_name'], text=message_html, parse_mode=telegram.ParseMode.HTML)
+
+
+url = "https://free-proxy-list.net/"
+soup = BeautifulSoup(requests.get(url).content, "html.parser")
+proxies = []
+for row in soup.find("section", {"id": "list"}).find_all("tr")[1:]:
+    tds = row.find_all("td")
+    try:
+        ip = tds[0].text.strip()
+        port = tds[1].text.strip()
+        host = f"{ip}:{port}"
+        proxies.append(host)
+    except IndexError:
+        continue
+
+def get_proxies():
+    return random.choice(proxies)
 
 ua = UserAgent()
 payload={}
@@ -143,11 +161,13 @@ def parse_huobi():
 def parse_coinbase():
     url = "https://medium.com/@coinbaseblog"
     headers["User-Agent"] = str(ua.random)
+    proxy = "72.195.114.184:4145"
+    proxies = {"http": "socks5://"+proxy, "https": "socks5://"+proxy}
 
     while True:
         try:
             first = client.get('coinbaseFirst')
-            response = requests.request("GET", url)
+            response = requests.request("GET", url, proxies=proxies, headers=headers, data=payload)
             soup = BeautifulSoup(response.text, 'html.parser')
             mainCenter = soup.find(class_='ap aq ar as at fz av v')
             new_resp = []
@@ -168,11 +188,15 @@ def parse_coinbase():
                         for rs in new_resp:
                             sendNotificationsViaTelegram(rs)
                         return new_resp
+            print("ok")
         except Exception as e:
             print("Coinbase", e)
+            proxy = get_proxies()
+            print(proxy)
+            proxies = {"http": "http://"+proxy, "https://": "https"+proxy, "ftp":"ftp://"+proxy}
         sleep(1)
 
 parse_binance.delay()
 parse_okex.delay()
 parse_huobi.delay()
-parse_coinbase.delay()
+# parse_coinbase()
