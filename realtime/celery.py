@@ -153,48 +153,49 @@ def parse_huobi():
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Huobi🔱\n\n{rs['title']}")
                         return new_resp
+            return "No Changes"
         except Exception as e:
             print("Huobi", e)
             sleep(1)
 
-@app.task()
-def parse_coinbase():
-    url = "https://medium.com/@coinbaseblog"
-    headers["User-Agent"] = str(ua.random)
-    proxy = "72.195.114.184:4145"
-    proxies = {"http": "socks5://"+proxy, "https": "socks5://"+proxy}
+# @app.task()
+# def parse_coinbase():
+#     url = "https://medium.com/@coinbaseblog"
+#     headers["User-Agent"] = str(ua.random)
+#     proxy = "72.195.114.184:4145"
+#     proxies = {"http": "socks5://"+proxy, "https": "socks5://"+proxy}
 
-    while True:
-        try:
-            first = client.get('coinbaseFirst')
-            response = requests.request("GET", url, proxies=proxies, headers=headers, data=payload)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            mainCenter = soup.find(class_='ap aq ar as at fz av v')
-            new_resp = []
+#     while True:
+#         try:
+#             first = client.get('coinbaseFirst')
+#             response = requests.request("GET", url, proxies=proxies, headers=headers, data=payload)
+#             soup = BeautifulSoup(response.text, 'html.parser')
+#             mainCenter = soup.find(class_='ap aq ar as at fz av v')
+#             new_resp = []
 
-            first_url = next(mainCenter.children, None)
-            first_url = first_url.find("h1").find("a")["href"]
-            if not first:
-                client.set('coinbaseFirst', first_url)
-            if first != first_url:
-                for r in mainCenter:
-                    url_ = r.find("h1").find("a")["href"]
-                    if first != url_:
-                        title_ = r.find("h1").find("a").text
-                        text_ = "\n".join(f.text for f in r.find("section").findChildren("p"))
-                        new_resp.append(f"🔱Coinbase🔱\n\n{url_.split('?')[0]}\n<strong>{title_}</strong>\n{text_}")
-                    else:
-                        client.set('coinbaseFirst', first_url)
-                        for rs in new_resp:
-                            sendNotificationsViaTelegram(rs)
-                        return new_resp
-            print("ok")
-        except Exception as e:
-            print("Coinbase", e)
-            proxy = get_proxies()
-            print(proxy)
-            proxies = {"http": "http://"+proxy, "https://": "https"+proxy, "ftp":"ftp://"+proxy}
-        sleep(1)
+#             first_url = next(mainCenter.children, None)
+#             first_url = first_url.find("h1").find("a")["href"]
+#             if not first:
+#                 client.set('coinbaseFirst', first_url)
+#             if first != first_url:
+#                 for r in mainCenter:
+#                     url_ = r.find("h1").find("a")["href"]
+#                     if first != url_:
+#                         title_ = r.find("h1").find("a").text
+#                         text_ = "\n".join(f.text for f in r.find("section").findChildren("p"))
+#                         new_resp.append(f"🔱Coinbase🔱\n\n{url_.split('?')[0]}\n<strong>{title_}</strong>\n{text_}")
+#                     else:
+#                         client.set('coinbaseFirst', first_url)
+#                         for rs in new_resp:
+#                             sendNotificationsViaTelegram(rs)
+#                         return new_resp
+#             print("ok")
+#         except Exception as e:
+#             print("Coinbase", e)
+#             proxy = get_proxies()
+#             print(proxy)
+#             proxies = {"http": "http://"+proxy, "https://": "https"+proxy, "ftp":"ftp://"+proxy}
+#         sleep(1)
 
 parse_binance.delay()
 parse_okex.delay()
