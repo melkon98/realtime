@@ -71,7 +71,7 @@ def parse_binance():
                 for r in resp["data"]["articles"]:
                     new_resp.append(r)
                 # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
-                return new_resp
+                print( new_resp)
             first = json.loads(first)
             if first["id"] != resp["data"]["articles"][0]["id"]:
                 for r in resp["data"]["articles"]:
@@ -82,7 +82,7 @@ def parse_binance():
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Binance🔱\n\n{rs['title']}")
-                        return new_resp
+                        print( new_resp)
         except Exception as e:
             print("Binance", e)
             sleep(1)
@@ -106,7 +106,7 @@ def parse_okex():
                 for r in resp["activities"]:
                     new_resp.append(r)
                 # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
-                return new_resp
+                print( new_resp)
             first = json.loads(first)
             if first["id"] != resp["activities"][0]["id"]:
                 for r in resp["activities"]:
@@ -117,7 +117,7 @@ def parse_okex():
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Okex🔱\n\nhttps://okexsupport.zendesk.com{rs['url']}\n {rs['title']}")
-                        return new_resp
+                        print( new_resp)
         except Exception as e:
             print("Okex", e)
             sleep(1)
@@ -141,7 +141,7 @@ def parse_huobi():
                 for r in resp["data"]["list"]:
                     new_resp.append(r)
                 # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
-                return new_resp
+                print( new_resp)
             first = json.loads(first)
             if first["id"] != resp["data"]["list"][0]["id"]:
                 for r in resp["data"]["list"]:
@@ -152,8 +152,8 @@ def parse_huobi():
                         # async_to_sync(channel_layer.group_send)("listners",{'type': 'chat_message','message': str(new_resp)}) 
                         for rs in new_resp:
                             sendNotificationsViaTelegram(f"🔱Huobi🔱\n\n{rs['title']}")
-                        return new_resp
-            return "No Changes"
+                        print( new_resp)
+            print( "No Changes")
         except Exception as e:
             print("Huobi", e)
             sleep(1)
